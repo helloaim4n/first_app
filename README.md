@@ -30,7 +30,7 @@ To get started with this project, you'll need Flutter installed on your machine.
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/your-username/first_flutter_app.git
+    git clone https://github.com/your-username/first_app.git
     ```
 2. **Navigate to the project directory**:
     ```bash
