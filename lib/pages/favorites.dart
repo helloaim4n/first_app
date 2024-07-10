@@ -25,9 +25,9 @@ class FavoritesPage extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text(pair.asPascalCase),
+            mouseCursor: WidgetStateMouseCursor.clickable,
             onTap: () {
-              // Untoggle the favorite
-              appState.untoggleFavorite(pair);
+              appState.removeFavorite(pair);
             },
           )
       ],

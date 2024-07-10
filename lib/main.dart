@@ -1,11 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/app_state.dart';
-import 'pages/generator_page.dart';
-import 'pages/favorites_page.dart';
+import 'pages/home.dart';
+import 'pages/login.dart';
+import 'package:go_router/go_router.dart';
+import '../providers/app_routes.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
+}
+
+GoRouter createRouter(AppState appState) {
+  return GoRouter(
+    initialLocation: AppRoutes.login,
+    refreshListenable: appState,
+    redirect: (context, state) {
+      final loggedIn = appState.isLoggedIn;
+      final goingToLogin = state.uri.toString() == AppRoutes.home;
+
+      if (!loggedIn && !goingToLogin) return AppRoutes.login;
+      if (loggedIn && goingToLogin) return AppRoutes.home;
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: AppRoutes.login,
+        redirect: (context, state) =>
+            appState.isLoggedIn ? AppRoutes.home : null,
+        builder: (context, state) => LoginPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.home,
+        builder: (context, state) => HomePage(),
+      ),
+    ],
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,76 +44,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AppState(),
-      child: MaterialApp(
-        title: 'First App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 3, 251)),
-        ),
-        home: MyHomePage(),
-      ),
+      child: Consumer<AppState>(builder: (context, appState, _) {
+        return MaterialApp.router(
+            title: 'First App',
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.blue,
+                secondary: Colors.red,
+              ),
+            ),
+            routerConfig: createRouter(appState));
+      }),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    Widget page;
-
-    // Switch between pages
-    switch (selectedIndex) {
-      case 0:
-        page = GeneratorPage();
-        break;
-      case 1:
-        page = FavoritesPage();
-        break;
-      default:
-        throw UnimplementedError('No widget for $selectedIndex');
-    }
-    return LayoutBuilder(builder: (context, constraint) {
-      return Scaffold(
-        body: Row(
-          children: [
-            SafeArea(
-              child: NavigationRail(
-                extended: constraint.maxWidth > 600,
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Home'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.favorite),
-                    label: Text('Favorites'),
-                  ),
-                ],
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
-              ),
-            ),
-          ],
-        ),
-      );
-    });
   }
 }
