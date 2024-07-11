@@ -74,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                           // Show snackbar
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
+                                // SnackBar appear on top of the screen
+                                padding: const EdgeInsets.all(60),
                                 content: Center(
                                     child: const Text(
                                         'Successfully Logged In! 🎉')),

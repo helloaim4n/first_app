@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
       create: (context) => AppState(),
       child: Consumer<AppState>(builder: (context, appState, _) {
         return MaterialApp.router(
+            color: Theme.of(context).colorScheme.primaryContainer,
             title: 'First App',
             theme: ThemeData(
               useMaterial3: true,

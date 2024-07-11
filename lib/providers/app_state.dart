@@ -51,7 +51,6 @@ class AppState extends ChangeNotifier {
   // Method to remove a favorite word pair
   void removeFavorite(WordPair pair) {
     favorites.remove(pair);
-    print('Removed $pair');
     notifyListeners(); // Notify listeners that the state has changed
   }
 }
