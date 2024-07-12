@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
+import '../models/quote_model.dart';
+
+Future<Quote> fetchQuote() async {
+  final response = await http.get(Uri.parse('https://type.fit/api/quotes'));
+
+  if (response.statusCode == 200) {
+    final jsonRes = json.decode(response.body);
+    return Quote.fromJson(jsonRes[0]);
+  } else {
+    throw Exception('Failed to fetch data');
+  }
+}
 
 class ApiPage extends StatefulWidget {
   @override
@@ -8,68 +21,32 @@ class ApiPage extends StatefulWidget {
 }
 
 class _ApiPageState extends State<ApiPage> {
-  List<dynamic> data = [];
-
-  Future<void> fetchData() async {
-    final response =
-        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
-    if (response.statusCode == 200) {
-      setState(() {
-        data = json.decode(response.body);
-      });
-    } else {
-      throw Exception('Failed to fetch data');
-    }
-  }
+  late Future<Quote> futureQuote;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    futureQuote = fetchQuote();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('API Pageeee'),
+        title: Text('Data from API'),
       ),
-      body: ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(
-                data[index]['title'],
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 8),
-                  Text(
-                    'Post ID: ${data[index]['id']}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    data[index]['body'],
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+      body: Center(
+          child: FutureBuilder<Quote>(
+              future: futureQuote,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.data!.text);
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+
+                return const CircularProgressIndicator();
+              })),
     );
   }
 }
