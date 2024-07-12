@@ -24,12 +24,6 @@ class AppState extends ChangeNotifier {
     notifyListeners(); // Notify listeners that the state has changed
   }
 
-  // Method to set the selected tab index
-  void setSelectedIndex(int index) {
-    _selectedIndex = index;
-    notifyListeners(); // Notify listeners that the state has changed
-  }
-
   // Method to get the next random word pair
   void getNextWord() {
     current = WordPair.random();
