@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'generator.dart';
-import 'favorites.dart';
-import 'api.dart';
-import 'settings.dart';
+import 'generator_page.dart';
+import 'favorites_page.dart';
+import 'api_page.dart';
+import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
