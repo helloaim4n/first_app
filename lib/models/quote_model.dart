@@ -13,7 +13,7 @@ class Quote {
         'author': String author,
       } =>
         Quote(text: text, author: author),
-      _ => throw const FormatException('Failed to load album'),
+      _ => throw const FormatException('Failed to load quote'),
     };
   }
 }
