@@ -1,26 +1,29 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
-// This class represents the state of the app
 class AppState extends ChangeNotifier {
-  var current = WordPair.random(); // The current word pair
+  var current = WordPair.random();
+  var favorites = <WordPair>[];
 
-  bool _loggedIn = false; // Flag to indicate if the user is logged in
-  int _selectedIndex = 0; // The index of the selected tab in the app
+  bool loggedIn = false;
+  bool get isLoggedIn => loggedIn;
 
-  // Getters for isLoggedIn and selectedIndex
-  bool get isLoggedIn => _loggedIn;
-  int get selectedIndex => _selectedIndex;
+  int currentQuoteIndex = 0;
+
+  void getNextQuote() {
+    currentQuoteIndex++;
+    notifyListeners();
+  }
 
   // Method to log in the user
   void logIn() {
-    _loggedIn = true;
+    loggedIn = true;
     notifyListeners(); // Notify listeners that the state has changed
   }
 
   // Method to log out the user
   void logOut() {
-    _loggedIn = false;
+    loggedIn = false;
     notifyListeners(); // Notify listeners that the state has changed
   }
 
@@ -29,8 +32,6 @@ class AppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners(); // Notify listeners that the state has changed
   }
-
-  var favorites = <WordPair>[]; // List to store favorite word pairs
 
   // Method to toggle the favorite status of the current word pair
   void toggleFavorite() {
