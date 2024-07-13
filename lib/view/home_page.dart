@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  static List<Widget> _pages = <Widget>[
+  final List<Widget> _pages = <Widget>[
     GeneratorPage(),
     FavoritesPage(),
     ApiPage(),
@@ -27,29 +27,33 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  List<BottomNavigationBarItem> _buildBottomNavBarItems() {
+    return const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.lightbulb_sharp),
+        label: 'Generator',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.favorite),
+        label: 'Favorites',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.api),
+        label: 'Fetching API',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: 'Settings',
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb_sharp),
-            label: 'Generator',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.api),
-            label: 'Fetching API',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+        items: _buildBottomNavBarItems(),
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.amber[800],
         currentIndex: _selectedIndex,
